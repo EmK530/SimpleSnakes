@@ -22,3 +22,12 @@ sudo apt install libsdl2-dev
 sudo apt install libsdl2-ttf-dev
 sudo apt install libsdl2-mixer-dev
 ```
+
+# How to compile
+## Windows
+The makefile uses `mingw-w64` to compile, make sure you have it installed.
+Running `make windows` will set up a ready-to-run build in `build/out/win64`.
+
+## Linux
+Compiling to Linux uses `make` or `make run`, but does not set up a proper build.
+The executable is dumped in the root repository folder and all you need to bundle with it is the repository's `assets` folder (see releases for reference).
