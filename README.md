@@ -1,6 +1,9 @@
 # Simple Snakes
 A SDL2 snake game in C with singleplayer and local/online multiplayer.
 
+### Notice
+This is very rushed and misses freeing some dynamically allocated memory, ran out of time to do a sweep of things that were never freed.
+
 <img width="300" height="300" alt="snakes-image" src="https://github.com/user-attachments/assets/d725cd86-be3c-4a16-83e9-d538d9552739" />
 
 # How to run
