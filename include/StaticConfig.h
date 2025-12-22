@@ -1,7 +1,7 @@
 #ifndef STATICCONFIG_H
 #define STATICCONFIG_H
 
-#define BUILD_VERSION "v1.0.1"
+#define BUILD_VERSION "v1.0.2"
 #ifdef DEV_BUILD
     #define BUILD_STRING BUILD_VERSION " DEV BUILD"
 #else
