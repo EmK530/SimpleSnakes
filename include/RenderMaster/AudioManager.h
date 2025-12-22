@@ -8,6 +8,11 @@ typedef struct {
     int opened;
 } AudioManager;
 
+typedef struct {
+    char* path;
+    Mix_Chunk* chunk;
+} AudioCacheEntry;
+
 void AudioManager_Init();
 void AudioManager_Reload();
 int  AudioManager_Play(const char* filePath, double volume, int loops);

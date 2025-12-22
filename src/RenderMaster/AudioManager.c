@@ -1,10 +1,48 @@
 #include <stdio.h>
+#include <string.h>
 
+#include "LinkedList.h"
 #include "SharedConfig.h"
 #include "RenderMaster/AudioManager.h"
 
 static AudioManager am = {};
 static SharedConfig* cfg = NULL;
+static LinkedList* audioCache = NULL;
+
+static Mix_Chunk* AudioManager_GetCached(const char* filePath)
+{
+    LinkedList_foreach(audioCache, node)
+    {
+        AudioCacheEntry* entry = node->item;
+        if (strcmp(entry->path, filePath) == 0)
+            return entry->chunk;
+    }
+    return NULL;
+}
+
+static Mix_Chunk* AudioManager_LoadCached(const char* filePath)
+{
+    Mix_Chunk* chunk = Mix_LoadWAV(filePath);
+    if (!chunk) {
+        printf("Failed to load %s: %s\n", filePath, Mix_GetError());
+        return NULL;
+    }
+
+    AudioCacheEntry* entry = malloc(sizeof(AudioCacheEntry));
+    entry->path = strdup(filePath);
+    entry->chunk = chunk;
+
+    LinkedList_append(audioCache, entry);
+    return chunk;
+}
+
+static void AudioManager_FreeCacheEntry(void* item)
+{
+    AudioCacheEntry* entry = item;
+    Mix_FreeChunk(entry->chunk);
+    free(entry->path);
+    free(entry);
+}
 
 void AudioManager_Init() {
     cfg = SharedConfig_Get();
@@ -16,6 +54,8 @@ void AudioManager_Init() {
     Mix_AllocateChannels(16);
     am.nextChannel = 0;
     am.opened = 1;
+
+    audioCache = LinkedList_create();
 }
 
 void AudioManager_Reload() {
@@ -39,7 +79,9 @@ int AudioManager_PlayCh(const char* filePath, double volume, int channel, int lo
     if(!am.opened)
         return -1;
     
-    Mix_Chunk* chunk = Mix_LoadWAV(filePath);
+    Mix_Chunk* chunk = AudioManager_GetCached(filePath);
+    if (!chunk)
+        chunk = AudioManager_LoadCached(filePath);
     if (!chunk) {
         printf("Failed to load %s: %s\n", filePath, Mix_GetError());
         return -1;
@@ -81,5 +123,6 @@ void AudioManager_StopAll() {
 void AudioManager_Quit() {
     if(!am.opened)
         return;
+    LinkedList_dispose(&audioCache, AudioManager_FreeCacheEntry);
     Mix_CloseAudio();
 }
