@@ -123,6 +123,6 @@ void AudioManager_StopAll() {
 void AudioManager_Quit() {
     if(!am.opened)
         return;
-    LinkedList_dispose(&audioCache, AudioManager_FreeCacheEntry);
     Mix_CloseAudio();
+    LinkedList_clear(audioCache, AudioManager_FreeCacheEntry);
 }
