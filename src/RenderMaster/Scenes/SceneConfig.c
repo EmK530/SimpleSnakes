@@ -8,6 +8,7 @@
 #include "easings.h"
 #include "StaticConfig.h"
 #include "SharedConfig.h"
+#include "Effects/TileBackground.h"
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
 #include "RenderMaster/SceneUtils.h"
@@ -231,6 +232,8 @@ int SceneConfig_Work(void* _self, SDL_Window* window, SDL_Renderer* renderer, do
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
     SceneConfig* self = (SceneConfig*)_self;
+
+    DrawCellBackground(renderer, time, 3);
 
     // Render Game Setup
     FontManager_RenderFixed(renderer, "MonacoVS", height/14, 40, width/2, height/76, "GAME SETUP", Centered, Start, (SDL_Color){255, 192, 128, 255});

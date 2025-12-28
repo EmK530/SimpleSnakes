@@ -7,7 +7,7 @@
 #include "LinkedList.h"
 #include "StaticConfig.h"
 
-#include "Effects/TileBackground.h"
+#include "Effects/TrippyBackground.h"
 
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
@@ -406,7 +406,7 @@ int SceneMulti_Lobby_Work(void* _self, SDL_Window* window, SDL_Renderer* rendere
     int height = 0;
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
-    DrawCellBackground(renderer, self->time, 3);
+    DrawTrippyBackground(renderer, deltaTime);
 
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/40, mp->lobbyName, Centered, Start, (SDL_Color){48, 48, 48, 255});
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/48, mp->lobbyName, Centered, Start, (SDL_Color){255, 192, 128, 255});

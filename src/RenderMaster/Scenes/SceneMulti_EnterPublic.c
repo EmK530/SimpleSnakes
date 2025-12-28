@@ -6,7 +6,7 @@
 #include "SharedConfig.h"
 #include "LinkedList.h"
 
-#include "Effects/TileBackground.h"
+#include "Effects/TrippyBackground.h"
 
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
@@ -233,7 +233,7 @@ int SceneMulti_EnterPublic_Work(void* _self, SDL_Window* window, SDL_Renderer* r
     int height = 0;
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
-    DrawCellBackground(renderer, self->time, 3);
+    DrawTrippyBackground(renderer, deltaTime);
 
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/40, "WorldLink", Centered, Start, (SDL_Color){48, 48, 48, 255});
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/48, "WorldLink", Centered, Start, (SDL_Color){192, 192, 255, 255});

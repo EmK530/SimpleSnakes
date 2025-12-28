@@ -4,8 +4,9 @@
 
 #include "SharedConfig.h"
 
-#include "Effects/TileBackground.h"
+#include "Effects/TrippyBackground.h"
 
+#include "RenderMaster/Transitions.h"
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
 #include "RenderMaster/SceneUtils.h"
@@ -52,6 +53,9 @@ int SceneTitle_OnInput(void* _self, SDL_Window* window, SDL_Renderer* renderer, 
 {
     SceneTitle* self = (SceneTitle*)_self;
 
+    if(Transitions_IsBusy())
+        return 1;
+
     if (event->type == SDL_KEYDOWN)
     {
         switch(event->key.keysym.sym)
@@ -79,27 +83,31 @@ int SceneTitle_OnInput(void* _self, SDL_Window* window, SDL_Renderer* renderer, 
                     {
                         cfg->localMultiplayer = 0;
                         self->abandon = SCENE_GAME;
-                        AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
+                        Transitions_Start("Singleplayer", 164, 255, 164);
+                        //AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
                         break;
                     }
                     case 2: // Local Multiplayer
                     {
                         cfg->localMultiplayer = 1;
                         self->abandon = SCENE_GAME;
-                        AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
+                        Transitions_Start("Local   Multiplayer", 255, 255, 164);
+                        //AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
                         break;
                     }
                     case 3: // Online Multiplayer
                     {
                         cfg->localMultiplayer = 0;
                         self->abandon = SCENE_MULTI;
-                        AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
+                        Transitions_Start("WorldLink", 164, 164, 255);
+                        //AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
                         break;
                     }
                     case 4: // Scoreboard
                     {
                         self->abandon = SCENE_SCOREBOARD;
-                        AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
+                        Transitions_Start("Scoreboard", 255, 192, 128);
+                        //AudioManager_PlayCh("assets/audio/sfx/config_select.ogg", 0.33, 1, 0);
                         break;
                     }
                 }
@@ -122,14 +130,18 @@ int SceneTitle_Work(void* _self, SDL_Window* window, SDL_Renderer* renderer, dou
 
     SceneTitle* self = (SceneTitle*)_self;
 
-    if(self->abandon != -1)
-        return self->abandon;
+    if(self->abandon != 1)
+    {
+        int mid = Transitions_Step(deltaTime);
+        if(mid)
+            return self->abandon;
+    }
 
     int width = 0;
     int height = 0;
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
-    DrawCellBackground(renderer, time, 3);
+    DrawTrippyBackground(renderer, deltaTime);
 
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/40, "Simple   Snakes", Centered, Start, (SDL_Color){48, 48, 48, 255});
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/48, "Simple   Snakes", Centered, Start, (SDL_Color){192, 255, 192, 255});

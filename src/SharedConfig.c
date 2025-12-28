@@ -8,7 +8,7 @@ static SharedConfig g_config = {
 
     256, // Audio Buffer
     48000, // Audio Sample Rate
-    0, // Vertical Sync
+    1, // Vertical Sync
     1, // DisplayFPS
     14, // fpsFontSize
     0, // Mp music playing
@@ -16,7 +16,8 @@ static SharedConfig g_config = {
     0, // mpapi Listener Id
     0, // local Multiplayer
     NULL, // public Scoreboard instance, to be set later
-    0 // score from game, to be set later
+    0, // score from game, to be set later
+    NULL // render texture, to be set later
 };
 
 SharedConfig* SharedConfig_Get() {

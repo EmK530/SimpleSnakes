@@ -115,6 +115,9 @@ void Scoreboard_destroy(Scoreboard **sb)
 
 int Scoreboard_canSubmit(Scoreboard *sb, int score)
 {
+    if(score < 1)
+        return 0;
+    
     if (sb->totalRecords < SCOREBOARD_MAX_RECORDS)
         return 1;
 

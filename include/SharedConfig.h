@@ -1,6 +1,7 @@
 #ifndef SHAREDCONFIG_H
 #define SHAREDCONFIG_H
 
+#include "SDL2/SDL.h"
 #include "Multiplayer.h"
 #include "Scoreboard.h"
 
@@ -21,6 +22,7 @@ typedef struct {
     int localMultiplayer;
     Scoreboard* scoreboard;
     int scoreFromGame;
+    SDL_Texture* gameTex;
 } SharedConfig;
 
 SharedConfig* SharedConfig_Get();

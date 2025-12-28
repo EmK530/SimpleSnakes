@@ -12,6 +12,10 @@ int clampi(int v, int min, int max) {
     return (v < min ? min : (v > max ? max : v));
 }
 
+double clampd(double v, double min, double max) {
+    return (v < min ? min : (v > max ? max : v));
+}
+
 void OutlineRect(SDL_Renderer* renderer, SDL_Rect* rect, int size, int R, int G, int B)
 {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);

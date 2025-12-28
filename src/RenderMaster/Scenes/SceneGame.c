@@ -793,7 +793,7 @@ int SceneGame_Work(void* _self, SDL_Window* window, SDL_Renderer* renderer, doub
     if(self->gameEnded)
     {
         self->loseTimer += deltaTime;
-        if(self->loseTimer > 1)
+        if(self->loseTimer > 1.01)
         {
             if(!self->playedLoseSound)
             {

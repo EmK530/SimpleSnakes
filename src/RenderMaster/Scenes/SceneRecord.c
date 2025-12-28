@@ -6,7 +6,7 @@
 #include "SharedConfig.h"
 #include "LinkedList.h"
 
-#include "Effects/TileBackground.h"
+#include "Effects/TrippyBackground.h"
 
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
@@ -149,7 +149,7 @@ int SceneRecord_Work(void* _self, SDL_Window* window, SDL_Renderer* renderer, do
     int height = 0;
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
-    DrawCellBackground(renderer, self->time, 3);
+    DrawTrippyBackground(renderer, deltaTime);
 
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/40, "New   Record!", Centered, Start, (SDL_Color){48, 64, 48, 255});
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/48, "New   Record!", Centered, Start, (SDL_Color){192, 255, 192, 255});

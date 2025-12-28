@@ -6,7 +6,7 @@
 #include "SharedConfig.h"
 #include "LinkedList.h"
 
-#include "Effects/TileBackground.h"
+#include "Effects/TrippyBackground.h"
 
 #include "RenderMaster/AudioManager.h"
 #include "RenderMaster/FontManager.h"
@@ -86,7 +86,7 @@ int SceneScoreboard_Work(void* _self, SDL_Window* window, SDL_Renderer* renderer
     int height = 0;
     SDL_GetRendererOutputSize(renderer, &width, &height);
 
-    DrawCellBackground(renderer, time, 3);
+    DrawTrippyBackground(renderer, deltaTime);
 
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/40, "Scoreboard", Centered, Start, (SDL_Color){64, 48, 32, 255});
     FontManager_RenderFixed(renderer, "MonacoVS", height/12, 26, width/2, height/48, "Scoreboard", Centered, Start, (SDL_Color){255, 192, 128, 255});

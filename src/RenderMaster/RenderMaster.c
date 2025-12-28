@@ -7,6 +7,7 @@
 #include "RenderMaster/RenderMaster.h"
 #include "RenderMaster/FontManager.h"
 #include "RenderMaster/AudioManager.h"
+#include "RenderMaster/Transitions.h"
 
 // All scenes
 #include "RenderMaster/Scenes/SceneIntro.h"
@@ -80,6 +81,14 @@ RenderMaster* RenderMaster_Create(const char* title, int width, int height)
         SDL_Quit();
         return NULL;
     }
+    cfg->gameTex = SDL_CreateTexture(
+        ren,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        width,
+        height
+    );
+    SDL_SetRenderTarget(ren, cfg->gameTex);
 
     RenderMaster* rm = (RenderMaster*)malloc(sizeof(RenderMaster));
     if (!rm)
@@ -154,10 +163,12 @@ int RenderMaster_Work(RenderMaster* rm)
     }
     lastCounter = currentCounter;
 
+    int updated = 0;
     if(cfg->resolutionWasChanged)
     {
         printf("[RenderMaster] Applying new resolution: %ix%i\n",cfg->screenWidth,cfg->screenHeight);
         SDL_SetWindowSize(rm->window, cfg->screenWidth, cfg->screenHeight);
+        updated = 1;
     } else {
         int curW = 0;
         int curH = 0;
@@ -167,8 +178,27 @@ int RenderMaster_Work(RenderMaster* rm)
             printf("[RenderMaster] Resolution updating: %ix%i\n",curW,curH);
             cfg->screenWidth = curW;
             cfg->screenHeight = curH;
+            updated = 1;
         }
     }
+    if(cfg->gameTex != NULL)
+    {
+        if(updated)
+        {
+            SDL_DestroyTexture(cfg->gameTex);
+            cfg->gameTex = SDL_CreateTexture(
+                rm->renderer,
+                SDL_PIXELFORMAT_RGBA8888,
+                SDL_TEXTUREACCESS_TARGET,
+                cfg->screenWidth,
+                cfg->screenHeight
+            );
+        }
+        //SDL_SetRenderTarget(rm->renderer, cfg->gameTex);
+    }
+
+    if(Transitions_IsActive())
+        SDL_SetRenderTarget(rm->renderer, cfg->gameTex);
 
     SDL_SetRenderDrawColor(rm->renderer, 0, 0, 0, 255);
     SDL_RenderClear(rm->renderer);
@@ -202,6 +232,17 @@ int RenderMaster_Work(RenderMaster* rm)
         }
     }
 
+    SDL_SetRenderTarget(rm->renderer, NULL);
+
+    if(!Transitions_IsActive())
+    {
+        //SDL_RenderCopy(rm->renderer, cfg->gameTex, NULL, NULL);
+    } else {
+        if(!Transitions_HasStepped())
+            Transitions_Step(delta);
+        Transitions_Draw(rm->renderer);
+    }
+
     // Display FPS
     if(cfg->displayFps)
     {
@@ -231,6 +272,11 @@ void RenderMaster_Destroy(RenderMaster** rm)
     RenderMaster* rm_ptr = *rm;
     if(rm_ptr->renderer)
         SDL_DestroyRenderer(rm_ptr->renderer);
+    if(cfg->gameTex != NULL)
+    {
+        SDL_DestroyTexture(cfg->gameTex);
+        cfg->gameTex = NULL;
+    }
     if(rm_ptr->window)
         SDL_DestroyWindow(rm_ptr->window);
     SDL_Quit();
